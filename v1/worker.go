@@ -372,10 +372,19 @@ func (worker *Worker) taskFailed(signature *tasks.Signature, taskErr error) erro
 	// Trigger error callbacks
 	for _, errorTask := range signature.OnError {
 		// Pass error as a first argument to error callbacks
-		args := append([]tasks.Arg{{
-			Type:  "string",
-			Value: taskErr.Error(),
-		}}, errorTask.Args...)
+		taskSignatureBytes, _ := json.Marshal(signature)
+		args := append([]tasks.Arg{
+			{
+				Name: "errMsg",
+				Type:  "string",
+				Value: taskErr.Error(),
+			},
+			{
+				Name: "payload",
+				Type: "[]uint8",
+				Value: taskSignatureBytes,
+			},
+		}, errorTask.Args...)
 		errorTask.Args = args
 		worker.server.SendTask(errorTask)
 	}
