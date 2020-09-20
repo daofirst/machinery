@@ -9,6 +9,7 @@ import (
 	"sync"
 	"syscall"
 	"time"
+	"encoding/json"
 
 	"github.com/RichardKnop/machinery/v1/backends/amqp"
 	"github.com/RichardKnop/machinery/v1/brokers/errs"
